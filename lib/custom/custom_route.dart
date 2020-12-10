@@ -4,6 +4,7 @@ import 'package:apod_app/screens/apod_screen.dart';
 import 'package:apod_app/screens/apod_search_screen.dart';
 import 'package:flutter/material.dart';
 
+//Custom transition between pages
 class CustomPageTransitionBuilder extends PageTransitionsBuilder {
   @override
   Widget buildTransitions<T>(
@@ -20,7 +21,8 @@ class CustomPageTransitionBuilder extends PageTransitionsBuilder {
   }
 }
 
-Map<String, Widget Function(BuildContext)> rotas() {
+//All the routes is here
+Map<String, Widget Function(BuildContext)> routes() {
   return {
     ApodScreen.routeName: (ctx) => ApodScreen(),
     ApodSavedScreen.routeName: (ctx) => ApodSavedScreen(),

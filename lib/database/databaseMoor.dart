@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:apod_app/database/daos/apodDao.dart';
 import 'package:apod_app/database/tables/apod.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart' show getDatabasesPath;
@@ -7,12 +8,13 @@ import 'package:moor/ffi.dart';
 
 part 'databaseMoor.g.dart';
 
+//Configurations for Moor database
 @UseMoor(
   tables: [
     ApodDB,
   ],
   daos: [
-    // ApodDao,
+    ApodDao,
   ],
 )
 // _$AppDatabase is the name of the generated class

@@ -437,6 +437,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $ApodDBTable _apodDB;
   $ApodDBTable get apodDB => _apodDB ??= $ApodDBTable(this);
+  ApodDao _apodDao;
+  ApodDao get apodDao => _apodDao ??= ApodDao(this as AppDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//Custom Sliver App Bar to show a image inside
 class DetailSliverAppBar extends StatefulWidget {
   final String title;
   final String image;

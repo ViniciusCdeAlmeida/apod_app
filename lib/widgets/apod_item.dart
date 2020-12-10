@@ -2,19 +2,19 @@ import 'package:apod_app/helpers/apod.dart';
 import 'package:apod_app/screens/apod_detail_screen.dart';
 import 'package:flutter/material.dart';
 
-class ApodSearchItem extends StatefulWidget {
+//Widget for Apod saved page
+class ApodItem extends StatefulWidget {
   final Apod apod;
 
-  ApodSearchItem({
-    @required this.apod,
-  });
+  ApodItem(this.apod);
   @override
-  _ApodSearchItemState createState() => _ApodSearchItemState();
+  _ApodItemState createState() => _ApodItemState();
 }
 
-class _ApodSearchItemState extends State<ApodSearchItem> {
+class _ApodItemState extends State<ApodItem> {
   @override
   Widget build(BuildContext context) {
+    //InkWell make the card clickable
     return InkWell(
       child: Container(
         child: Padding(
@@ -22,10 +22,13 @@ class _ApodSearchItemState extends State<ApodSearchItem> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Text(
+                'Date: ${widget.apod.date}',
+              ),
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    left: 40.0,
+                    left: 10.0,
                     right: 40.0,
                   ),
                   child: Text(
@@ -33,10 +36,12 @@ class _ApodSearchItemState extends State<ApodSearchItem> {
                   ),
                 ),
               ),
+              //Make a round image to fill in a card
               ClipRRect(
                 borderRadius: BorderRadius.all(
                   const Radius.circular(15),
                 ),
+                //Some Requests get a video insted a image
                 child: widget.apod.media_type == 'video'
                     ? Text('No image')
                     : Image.network(

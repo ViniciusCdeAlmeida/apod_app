@@ -1,5 +1,6 @@
+import 'package:apod_app/custom/custom_search_sliverBar.dart';
 import 'package:apod_app/stores/apod_store.dart';
-import 'package:apod_app/widgets/apod_search_item.dart';
+import 'package:apod_app/widgets/apod_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ class _ApodSearchScreenState extends State<ApodSearchScreen> {
     super.didChangeDependencies();
   }
 
+  //Picker a date
   void _pickDateDialog() {
     showDatePicker(
             context: context,
@@ -37,6 +39,7 @@ class _ApodSearchScreenState extends State<ApodSearchScreen> {
     });
   }
 
+  //Submit a request to get a APOD
   Future<void> _submit() async {
     String _date = _selectedDate.year.toString() +
         '-' +
@@ -56,109 +59,120 @@ class _ApodSearchScreenState extends State<ApodSearchScreen> {
 
     _apodStore = Provider.of<ApodStore>(context, listen: false);
     return Scaffold(
-      body: Column(
-        children: [
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            elevation: 8.0,
-            child: Container(
-              height: deviceSize.height / 3,
-              width: deviceSize.width,
-              padding: const EdgeInsets.all(15.0),
-              child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text('Add Date'),
-                      onPressed: _pickDateDialog,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(_selectedDate == null
-                        ? 'No date chosen!'
-                        : 'Selected Date: ${DateFormat.yMMMd().format(_selectedDate)}'),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('HD Image?'),
-                          Observer(
-                            builder: (_) => IconButton(
-                              icon: Icon(Icons.check_box,
-                                  color: _apodStore.hdImage
-                                      ? Theme.of(context).toggleableActiveColor
-                                      : null),
-                              onPressed: () {
-                                _apodStore.hdImage
-                                    ? _apodStore.hdImage = false
-                                    : _apodStore.hdImage = true;
-                              },
-                            ),
-                          )
-                        ],
+      body: CustomScrollView(
+        shrinkWrap: true,
+        slivers: [
+          SearchSliverAppBar(
+            title: 'Astronomy Picture of the Day',
+            clean: _apodStore.cleanApods,
+            filter: _apodStore.filterApod,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Column(
+                  children: [
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 8.0,
+                      child: Container(
+                        height: deviceSize.height / 3,
+                        width: deviceSize.width,
+                        padding: const EdgeInsets.all(15.0),
+                        child: SingleChildScrollView(
+                          physics: NeverScrollableScrollPhysics(),
+                          child: Column(
+                            children: <Widget>[
+                              RaisedButton(
+                                child: Text('Add Date'),
+                                onPressed: _pickDateDialog,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(_selectedDate == null
+                                  ? 'No date chosen!'
+                                  : 'Selected Date: ${DateFormat.yMMMd().format(_selectedDate)}'),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('HD Image?'),
+                                    Observer(
+                                      builder: (_) => IconButton(
+                                        icon: Icon(Icons.check_box,
+                                            color: _apodStore.hdImage
+                                                ? Theme.of(context)
+                                                    .toggleableActiveColor
+                                                : null),
+                                        onPressed: () {
+                                          _apodStore.hdImage
+                                              ? _apodStore.hdImage = false
+                                              : _apodStore.hdImage = true;
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              RaisedButton(
+                                  child: Text('Search'), onPressed: _submit),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    RaisedButton(child: Text('Search'), onPressed: _submit),
-                    SizedBox(
-                      height: 20,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: Observer(
+                        // ignore: missing_return
+                        builder: (_) {
+                          switch (_apodStore.apodState) {
+                            case ApodState.empty:
+                            case ApodState.initial:
+                              return Center(
+                                child: Text('no data'),
+                              );
+                            case ApodState.loading:
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            case ApodState.loaded:
+                              return CustomScrollView(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                slivers: [
+                                  SliverList(
+                                    delegate: SliverChildListDelegate(
+                                      _apodStore.apods
+                                          .map(
+                                            (apod) => Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: ApodItem(apod),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                ],
+                              );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
           ),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Observer(
-                // ignore: missing_return
-                builder: (_) {
-                  switch (_apodStore.apodState) {
-                    case ApodState.empty:
-                      return Center(
-                        child: Text('no data'),
-                      );
-                    case ApodState.initial:
-                      return Center(
-                        child: Text('no data'),
-                      );
-                    case ApodState.loading:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    case ApodState.loaded:
-                      return CustomScrollView(
-                        shrinkWrap: true,
-                        slivers: [
-                          // MySliverAppBar(
-                          //   titulo: unidadeArgs.arg1,
-                          //   filtro: _estruturaLevantamentoStore.filtraBens,
-                          //   limpar: _estruturaLevantamentoStore.limpaFiltrados,
-                          // ),
-                          SliverList(
-                            delegate: SliverChildListDelegate(
-                              _apodStore.apods
-                                  .map(
-                                    (apod) => Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ApodSearchItem(apod: apod),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ),
-                        ],
-                      );
-                  }
-                },
-              ),
-            ),
-          )
         ],
       ),
     );

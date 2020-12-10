@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+//Custom Sliver App Bar to show search a APOD by date and title
 class SearchSliverAppBar extends StatefulWidget {
   final String title;
   final Function clean;
@@ -35,7 +36,6 @@ class _SearchSliverAppBarState extends State<SearchSliverAppBar>
       floating: true,
       pinned: false,
       snap: true,
-      backgroundColor: Colors.yellow[800],
       shape: ContinuousRectangleBorder(
         borderRadius: BorderRadius.only(
           bottomLeft: const Radius.circular(30.0),
@@ -70,6 +70,7 @@ class _SearchSliverAppBarState extends State<SearchSliverAppBar>
                 },
               ),
       ],
+      //The box to show where the text is going on
       flexibleSpace: FlexibleSpaceBar(
         title: AnimatedSwitcher(
           duration: Duration(milliseconds: 300),

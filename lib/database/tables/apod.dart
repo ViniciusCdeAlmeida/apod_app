@@ -1,5 +1,6 @@
 import 'package:moor/moor.dart';
 
+//Table to store data from APOD
 class ApodDB extends Table {
   TextColumn get date => text().nullable()();
   TextColumn get explanation => text().nullable()();

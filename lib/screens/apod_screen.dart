@@ -8,6 +8,7 @@ class ApodScreen extends StatefulWidget {
   _ApodScreenState createState() => _ApodScreenState();
 }
 
+//Bottom Navigation Bar to navigate in pages
 class _ApodScreenState extends State<ApodScreen> {
   int _currentIndex = 0;
   final List<Widget> _children = [
@@ -25,11 +26,6 @@ class _ApodScreenState extends State<ApodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _children[_currentIndex],
-      appBar: AppBar(
-        title: Center(
-          child: const Text('Astronomy Picture of the Day'),
-        ),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
         currentIndex: _currentIndex,

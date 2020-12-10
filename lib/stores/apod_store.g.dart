@@ -16,12 +16,26 @@ mixin _$ApodStore on _ApodStore, Store {
       (_$apodStateComputed ??= Computed<ApodState>(() => super.apodState,
               name: '_ApodStore.apodState'))
           .value;
+  Computed<ApodState> _$apodSavedStateComputed;
+
+  @override
+  ApodState get apodSavedState => (_$apodSavedStateComputed ??=
+          Computed<ApodState>(() => super.apodSavedState,
+              name: '_ApodStore.apodSavedState'))
+      .value;
   Computed<List<Apod>> _$apodsComputed;
 
   @override
   List<Apod> get apods => (_$apodsComputed ??=
           Computed<List<Apod>>(() => super.apods, name: '_ApodStore.apods'))
       .value;
+  Computed<List<Apod>> _$apodsSavedComputed;
+
+  @override
+  List<Apod> get apodsSaved =>
+      (_$apodsSavedComputed ??= Computed<List<Apod>>(() => super.apodsSaved,
+              name: '_ApodStore.apodsSaved'))
+          .value;
 
   final _$hdImageAtom = Atom(name: '_ApodStore.hdImage');
 
@@ -50,6 +64,21 @@ mixin _$ApodStore on _ApodStore, Store {
   set _apodList(List<Apod> value) {
     _$_apodListAtom.reportWrite(value, super._apodList, () {
       super._apodList = value;
+    });
+  }
+
+  final _$_apodFilteredListAtom = Atom(name: '_ApodStore._apodFilteredList');
+
+  @override
+  List<Apod> get _apodFilteredList {
+    _$_apodFilteredListAtom.reportRead();
+    return super._apodFilteredList;
+  }
+
+  @override
+  set _apodFilteredList(List<Apod> value) {
+    _$_apodFilteredListAtom.reportWrite(value, super._apodFilteredList, () {
+      super._apodFilteredList = value;
     });
   }
 
@@ -83,6 +112,53 @@ mixin _$ApodStore on _ApodStore, Store {
     });
   }
 
+  final _$_apodsObservableAtom = Atom(name: '_ApodStore._apodsObservable');
+
+  @override
+  ObservableList<Apod> get _apodsObservable {
+    _$_apodsObservableAtom.reportRead();
+    return super._apodsObservable;
+  }
+
+  @override
+  set _apodsObservable(ObservableList<Apod> value) {
+    _$_apodsObservableAtom.reportWrite(value, super._apodsObservable, () {
+      super._apodsObservable = value;
+    });
+  }
+
+  final _$_apodsFilteredObservableAtom =
+      Atom(name: '_ApodStore._apodsFilteredObservable');
+
+  @override
+  ObservableList<Apod> get _apodsFilteredObservable {
+    _$_apodsFilteredObservableAtom.reportRead();
+    return super._apodsFilteredObservable;
+  }
+
+  @override
+  set _apodsFilteredObservable(ObservableList<Apod> value) {
+    _$_apodsFilteredObservableAtom
+        .reportWrite(value, super._apodsFilteredObservable, () {
+      super._apodsFilteredObservable = value;
+    });
+  }
+
+  final _$_apodsFutureAtom = Atom(name: '_ApodStore._apodsFuture');
+
+  @override
+  ObservableFuture<List<Apod>> get _apodsFuture {
+    _$_apodsFutureAtom.reportRead();
+    return super._apodsFuture;
+  }
+
+  @override
+  set _apodsFuture(ObservableFuture<List<Apod>> value) {
+    _$_apodsFutureAtom.reportWrite(value, super._apodsFuture, () {
+      super._apodsFuture = value;
+    });
+  }
+
   final _$getApodAsyncAction = AsyncAction('_ApodStore.getApod');
 
   @override
@@ -97,12 +173,38 @@ mixin _$ApodStore on _ApodStore, Store {
     return _$getSavedApodsAsyncAction.run(() => super.getSavedApods());
   }
 
+  final _$_ApodStoreActionController = ActionController(name: '_ApodStore');
+
+  @override
+  void filterApod(String value) {
+    final _$actionInfo =
+        _$_ApodStoreActionController.startAction(name: '_ApodStore.filterApod');
+    try {
+      return super.filterApod(value);
+    } finally {
+      _$_ApodStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void filterApods(String value) {
+    final _$actionInfo = _$_ApodStoreActionController.startAction(
+        name: '_ApodStore.filterApods');
+    try {
+      return super.filterApods(value);
+    } finally {
+      _$_ApodStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 hdImage: ${hdImage},
 apodState: ${apodState},
-apods: ${apods}
+apodSavedState: ${apodSavedState},
+apods: ${apods},
+apodsSaved: ${apodsSaved}
     ''';
   }
 }

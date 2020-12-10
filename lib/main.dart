@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
+      //All providers is in this file
       providers: providers(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         home: ApodScreen(),
-        routes: rotas(),
+        //All routes is in this file
+        routes: routes(),
       ),
     );
   }
