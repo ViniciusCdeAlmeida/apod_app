@@ -1,4 +1,5 @@
 import 'package:apod_app/stores/apod_store.dart';
+import 'package:apod_app/widgets/apod_search_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -11,9 +12,7 @@ class ApodSearchScreen extends StatefulWidget {
 }
 
 class _ApodSearchScreenState extends State<ApodSearchScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
   ApodStore _apodStore;
-
   DateTime _selectedDate;
 
   @override
@@ -39,35 +38,16 @@ class _ApodSearchScreenState extends State<ApodSearchScreen> {
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState.validate()) {
-      return;
+    String _date = _selectedDate.year.toString() +
+        '-' +
+        _selectedDate.month.toString() +
+        '-' +
+        _selectedDate.day.toString();
+    try {
+      _apodStore.getApod(_date, _apodStore.hdImage.toString());
+    } catch (error) {
+      print(error);
     }
-    _formKey.currentState.save();
-    // try {
-    //   if (!_loginStore.usuarioOffline) {
-    //     _loginStore
-    //         .login(
-    //           _loginData['userName'],
-    //           _loginData['password'],
-    //         )
-    //         .then(
-    //           (_) => Navigator.of(context).pushNamed(
-    //             OrganizacaoTela.routeName,
-    //           ),
-    //         )
-    //         .catchError(
-    //           (error) => erroDialog(context, error.toString()),
-    //         );
-    //   } else {
-    //     _loginStore.logarOffline().then(
-    //           (_) => Navigator.of(context).pushNamed(
-    //             OrganizacaoTela.routeName,
-    //           ),
-    //         );
-    //   }
-    // } catch (error) {
-    //   erroDialog(context, error.toString());
-    // }
   }
 
   @override
@@ -87,51 +67,98 @@ class _ApodSearchScreenState extends State<ApodSearchScreen> {
               height: deviceSize.height / 3,
               width: deviceSize.width,
               padding: const EdgeInsets.all(15.0),
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
-                  child: Column(
-                    children: <Widget>[
-                      RaisedButton(
-                        child: Text('Add Date'),
-                        onPressed: _pickDateDialog,
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    RaisedButton(
+                      child: Text('Add Date'),
+                      onPressed: _pickDateDialog,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(_selectedDate == null
+                        ? 'No date chosen!'
+                        : 'Selected Date: ${DateFormat.yMMMd().format(_selectedDate)}'),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('HD Image?'),
+                          Observer(
+                            builder: (_) => IconButton(
+                              icon: Icon(Icons.check_box,
+                                  color: _apodStore.hdImage
+                                      ? Theme.of(context).toggleableActiveColor
+                                      : null),
+                              onPressed: () {
+                                _apodStore.hdImage
+                                    ? _apodStore.hdImage = false
+                                    : _apodStore.hdImage = true;
+                              },
+                            ),
+                          )
+                        ],
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(_selectedDate ==
-                              null //ternary expression to check if date is null
-                          ? 'No date chosen!'
-                          : 'Selected Date: ${DateFormat.yMMMd().format(_selectedDate)}'),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('HD Image?'),
-                            IconButton(
-                                icon: Icon(Icons.check_box,
-                                    color: Theme.of(context)
-                                        .toggleableActiveColor),
-                                onPressed: () {})
-                          ],
-                        ),
-                      ),
-                      RaisedButton(child: Text('Search'), onPressed: _submit),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Observer(builder: (_) {
-                        // switch (_apodStore.) {
-                        // }
-                      })
-                    ],
-                  ),
+                    ),
+                    RaisedButton(child: Text('Search'), onPressed: _submit),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Observer(
+                // ignore: missing_return
+                builder: (_) {
+                  switch (_apodStore.apodState) {
+                    case ApodState.empty:
+                      return Center(
+                        child: Text('no data'),
+                      );
+                    case ApodState.initial:
+                      return Center(
+                        child: Text('no data'),
+                      );
+                    case ApodState.loading:
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    case ApodState.loaded:
+                      return CustomScrollView(
+                        shrinkWrap: true,
+                        slivers: [
+                          // MySliverAppBar(
+                          //   titulo: unidadeArgs.arg1,
+                          //   filtro: _estruturaLevantamentoStore.filtraBens,
+                          //   limpar: _estruturaLevantamentoStore.limpaFiltrados,
+                          // ),
+                          SliverList(
+                            delegate: SliverChildListDelegate(
+                              _apodStore.apods
+                                  .map(
+                                    (apod) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ApodSearchItem(apod: apod),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      );
+                  }
+                },
+              ),
+            ),
+          )
         ],
       ),
     );

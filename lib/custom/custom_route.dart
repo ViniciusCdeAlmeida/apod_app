@@ -1,3 +1,4 @@
+import 'package:apod_app/screens/apod_detail_screen.dart';
 import 'package:apod_app/screens/apod_saved_screen.dart';
 import 'package:apod_app/screens/apod_screen.dart';
 import 'package:apod_app/screens/apod_search_screen.dart';
@@ -24,5 +25,6 @@ Map<String, Widget Function(BuildContext)> rotas() {
     ApodScreen.routeName: (ctx) => ApodScreen(),
     ApodSavedScreen.routeName: (ctx) => ApodSavedScreen(),
     ApodSearchScreen.routeName: (ctx) => ApodSearchScreen(),
+    ApodDetailScreen.routeName: (ctx) => ApodDetailScreen(),
   };
 }

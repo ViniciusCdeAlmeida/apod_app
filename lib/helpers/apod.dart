@@ -6,16 +6,20 @@ part 'apod.g.dart';
 class Apod {
   String date;
   String explanation;
-  String mediaType;
-  String serviceVersion;
+  // ignore: non_constant_identifier_names
+  String media_type;
+  // ignore: non_constant_identifier_names
+  String service_version;
   String title;
   String url;
 
   Apod({
     this.date,
     this.explanation,
-    this.mediaType,
-    this.serviceVersion,
+    // ignore: non_constant_identifier_names
+    this.media_type,
+    // ignore: non_constant_identifier_names
+    this.service_version,
     this.title,
     this.url,
   });
