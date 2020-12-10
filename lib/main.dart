@@ -22,9 +22,13 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'APP inventario',
         theme: ThemeData(
-          primaryColor: Colors.lightBlue[300],
-          toggleableActiveColor: const Color(0xFF2247C7),
-          errorColor: const Color(0xFF7A1C02),
+          primarySwatch: Colors.purple,
+          accentColor: Colors.amber,
+          canvasColor: Color.fromRGBO(255, 254, 229, 1),
+          textTheme: ThemeData.light().textTheme.copyWith(
+                bodyText1: TextStyle(color: Color.fromRGBO(20, 51, 51, 1)),
+                bodyText2: TextStyle(color: Color.fromRGBO(20, 51, 51, 1)),
+              ),
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {
               TargetPlatform.android: CustomPageTransitionBuilder(),

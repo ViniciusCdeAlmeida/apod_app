@@ -26,7 +26,9 @@ class _ApodScreenState extends State<ApodScreen> {
     return Scaffold(
       body: _children[_currentIndex],
       appBar: AppBar(
-        title: const Text('Apod'),
+        title: Center(
+          child: const Text('Astronomy Picture of the Day'),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
